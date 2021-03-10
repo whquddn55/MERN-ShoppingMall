@@ -16,6 +16,8 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use('/uploads', express.static('uploads'));
 app.use('/api/users', require('./route/user'));
+app.use('/api/product', require('./route/product'));
 
 app.listen(3000, () => console.log("App started on port 3000"));
