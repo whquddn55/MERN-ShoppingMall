@@ -8,6 +8,7 @@ import LandingPage from './views/LandingPage/LandingPage';
 import LoginPage from './views/LoginPage/LoginPage';
 import RegisterPage from './views/RegisterPage/RegisterPage';
 import NavBar from './views/NavBar/NavBar';
+import UploadProductPage from './views/UploadProductPage/UploadProductPage';
 import Auth from '../hoc/auth';
 
 function App() {
@@ -17,9 +18,10 @@ function App() {
     <NavBar/>
       <div style={{ paddingTop: '69px', minHeight: 'calc(100vh - 80px)' }}>
         <Switch>
-          <Route exact path="/" component={Auth(LandingPage, true)} />
+          <Route exact path="/" component={Auth(LandingPage, false)} />
           <Route exact path="/login" component={Auth(LoginPage, false)} />
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
+          <Route exact path="/upload" component={Auth(UploadProductPage, true)} />
         </Switch>
       </div>
     </Router>
