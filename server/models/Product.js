@@ -13,11 +13,11 @@ const productSchema = mongoose.Schema( {
         type : String,
     },
     price: {
-        Type : Number,
+        type : Number,
         default : 0,
     },
     images : {
-        Type : Array,
+        type : Array,
         default : [],
     },
     sold : {
