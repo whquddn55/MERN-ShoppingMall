@@ -20,13 +20,9 @@ function UploadProductPage(props) {
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState(0);
     const [continent, setContinent] = useState(1);
+    const [images, setImages] = useState([]);
 
     const user = useSelector(state=> state.user.userData);
-    let images = [];
-    
-    const setImages = (newImages) => {
-        images = [...newImages];
-    }
 
     const onChnageTitle = (event) => {
         setTitle(event.currentTarget.value);
@@ -45,7 +41,6 @@ function UploadProductPage(props) {
     const onSubmitHanlder = (event) => {
         event.preventDefault();
 
-        console.log(user);
         if(!title || !description || !price || !continent || !images) {
             return alert("Fill all types of input!");
         }
