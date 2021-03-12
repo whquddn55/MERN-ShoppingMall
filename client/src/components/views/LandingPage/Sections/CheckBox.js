@@ -19,13 +19,17 @@ function CheckBox(props) {
     }
 
     const renderCheckBoxList = () =>  props.list.map((element, index) => (
-        <Checkbox onChange={() => handleToggle(element.id)} checked = {checked.indexOf(element.id) === -1 ? false : true} key = {index}>{element.value}</Checkbox>
+        <Checkbox 
+            onChange={() => handleToggle(element.id)} 
+            checked = {checked.indexOf(element.id) === -1 ? false : true} 
+            key = {index}>{element.value}
+        </Checkbox>
     ))
 
     return (
         <div>
             <Collapse>
-                <Panel header="This is panel header 1" key="1">
+                <Panel header="Continents">
                     {renderCheckBoxList()}
                 </Panel>
                 

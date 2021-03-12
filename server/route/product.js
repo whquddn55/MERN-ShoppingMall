@@ -34,9 +34,10 @@ router.post('/products', (req, res) => {
     const skip = req.body.skip ? parseInt(req.body.skip) : 0;
     let filter = {};
     for (let key in req.body.filter)  {
-        if (req.body.filter[key].length > 0)
+        if (Object.keys(req.body.filter[key]).length > 0)
             filter[key] = req.body.filter[key];
     }
+    console.log(filter);
     Product.find(filter)
             .populate("writer")
             .skip(skip)

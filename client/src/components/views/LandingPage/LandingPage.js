@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Row, Col} from 'antd';
+import {Button, Card, Row, Col, Divider} from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import axios from 'axios';
 import ImageSlider from '../../utils/ImageSlider';
 import CheckBox from './Sections/CheckBox';
-import {continents} from './Sections/Datas';
+import RadioBox from './Sections/RadioBox'
+import {continents, prices} from './Sections/Datas';
 
 function LandingPage(props) {
     const [products, setProducts] = useState([])
@@ -12,8 +13,8 @@ function LandingPage(props) {
     const [lastPostSize, setLastPostSize] = useState(4)
     const [filter, setFilter] = useState({
         continent : [],
-        price : [],
-    })
+        price : {},
+    }) // why use state?
 
     const limit = 4;
 
@@ -22,11 +23,12 @@ function LandingPage(props) {
     }, [])
 
     useEffect(() => {
-        console.log(skip);
-    }, [skip])
+        getProducts({limit});
+        setSkip(0); 
+    }, [filter])
 
     const getProducts = (body, loadMore = false) => {
-        axios.post('/api/product/products', body)
+        axios.post('/api/product/products', {...body, filter})
             .then(response => {
                 if (response.data.success) {
                     setLastPostSize(response.data.productsInfo.length);
@@ -63,9 +65,8 @@ function LandingPage(props) {
         
         const newFilters = {...filter};
         newFilters[category] = filters;
-        
-        getProducts({limit, filter : newFilters});
-        setSkip(0); 
+
+        setFilter(newFilters);
     }
 
     return (
@@ -75,7 +76,14 @@ function LandingPage(props) {
             </div>
 
 
-            <CheckBox list = {continents} handleFilters={filters => handleFilters(filters, "continent")}/>
+            <Row gutter = {16, 16} >
+                <Col lg = {12} xs = {24}>
+                    <CheckBox list = {continents} handleFilters={filters => handleFilters(filters, "continent")}/>
+                </Col>
+                <Col  lg = {12} xs = {24}>
+                    <RadioBox list = {prices} handleFilters={filters => handleFilters(filters, "price")}/>
+                </Col>
+            </Row>
 
 
 
