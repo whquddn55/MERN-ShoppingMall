@@ -14,7 +14,7 @@ function LandingPage(props) {
     const [filter, setFilter] = useState({
         continent : [],
         price : {},
-    }) // why use state?
+    })
 
     const limit = 4;
 
@@ -68,7 +68,6 @@ function LandingPage(props) {
 
         setFilter(newFilters);
     }
-
     return (
         <div style = {{width : '75%', margin : '3rem auto'}}>
             <div style = {{textAlign:'center'}}>
