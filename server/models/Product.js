@@ -35,6 +35,16 @@ const productSchema = mongoose.Schema( {
     }
 }, { timestamps : true});
 
+productSchema.index({
+    title : 'text',
+    description : 'text',
+}, {
+    weight : {
+        title : 5,
+        description : 1,
+    }
+})
+
 
 let Product = mongoose.model('Product', productSchema);
 

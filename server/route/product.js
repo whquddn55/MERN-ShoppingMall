@@ -32,12 +32,19 @@ router.post('/', (req, res) => {
 router.post('/products', (req, res) => {
     const limit = req.body.limit ? parseInt(req.body.limit) : 100;
     const skip = req.body.skip ? parseInt(req.body.skip) : 0;
+    const term = req.body.filter.term
     let filter = {};
     for (let key in req.body.filter)  {
+        if (key === 'term')
+            continue;
         if (Object.keys(req.body.filter[key]).length > 0)
             filter[key] = req.body.filter[key];
     }
-    Product.find(filter)
+    console.log(filter);
+    console.log(term);
+    if (term) {
+        Product.find(filter)
+            .find({$text : {$search : term}})
             .populate("writer")
             .skip(skip)
             .limit(limit)
@@ -45,6 +52,17 @@ router.post('/products', (req, res) => {
                 if (err) return res.status(400).json({success : false, err});
                 return res.status(200).json({success : true, productsInfo})
             })
+    }
+    else {
+        Product.find(filter)
+            .populate("writer")
+            .skip(skip)
+            .limit(limit)
+            .exec((err, productsInfo) => {
+                if (err) return res.status(400).json({success : false, err});
+                return res.status(200).json({success : true, productsInfo})
+            })
+    }
 })
 
 

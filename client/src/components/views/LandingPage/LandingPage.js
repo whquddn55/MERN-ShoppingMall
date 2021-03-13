@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {Button, Card, Row, Col, Divider} from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import axios from 'axios';
 import ImageSlider from '../../utils/ImageSlider';
 import CheckBox from './Sections/CheckBox';
-import RadioBox from './Sections/RadioBox'
+import RadioBox from './Sections/RadioBox';
+import SearchBar from './Sections/SearchBar';
 import {continents, prices} from './Sections/Datas';
 
 function LandingPage(props) {
@@ -14,6 +15,7 @@ function LandingPage(props) {
     const [filter, setFilter] = useState({
         continent : [],
         price : {},
+        term : '',
     })
 
     const limit = 4;
@@ -22,9 +24,14 @@ function LandingPage(props) {
         getProducts({limit});
     }, [])
 
+    const mounted = useRef(false);
     useEffect(() => {
-        getProducts({limit});
-        setSkip(0); 
+        if (!mounted.current)
+            mounted.current = true;
+        else {
+            getProducts({limit});
+            setSkip(0); 
+        }
     }, [filter])
 
     const getProducts = (body, loadMore = false) => {
@@ -51,7 +58,7 @@ function LandingPage(props) {
     const renderCards = () => products.map((product, index) => {
         return (<Col lg={6} md={8} s={12} xs={24}  key = {index}>
                     <Card
-                        cover={<ImageSlider images={product.images}/>}
+                        cover={<ImageSlider images={product.images} style = {{width : '100%', maxHeight : '150px'}}/>}
                     >
                         <Meta 
                             title = {product.title}
@@ -68,6 +75,7 @@ function LandingPage(props) {
 
         setFilter(newFilters);
     }
+    
     return (
         <div style = {{width : '75%', margin : '3rem auto'}}>
             <div style = {{textAlign:'center'}}>
@@ -75,7 +83,7 @@ function LandingPage(props) {
             </div>
 
 
-            <Row gutter = {16, 16} >
+            <Row gutter = {16, 16}>
                 <Col lg = {12} xs = {24}>
                     <CheckBox list = {continents} handleFilters={filters => handleFilters(filters, "continent")}/>
                 </Col>
@@ -83,7 +91,12 @@ function LandingPage(props) {
                     <RadioBox list = {prices} handleFilters={filters => handleFilters(filters, "price")}/>
                 </Col>
             </Row>
+            <hr/>
 
+
+            <div style = {{width : '100%', display:'flex', justifyContent:'flex-end', margin: '1rem auto'}}>
+                <SearchBar handleFilters={filters => handleFilters(filters, "term")}/>
+            </div>
 
 
             <Row gutter={16, 16}>
@@ -92,7 +105,7 @@ function LandingPage(props) {
 
 
             {lastPostSize == limit &&
-                <div style = {{ display : 'flex', justifyContent:'center'}}>
+                <div style = {{ display : 'flex', justifyContent:'center', margin : '30px'}}>
                     <Button onClick = {onLoadMore}>더 보기</Button>
                 </div>
             }
