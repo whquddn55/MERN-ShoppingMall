@@ -6,7 +6,7 @@ import ImageSlider from '../../utils/ImageSlider';
 import CheckBox from './Sections/CheckBox';
 import RadioBox from './Sections/RadioBox';
 import SearchBar from './Sections/SearchBar';
-import {continents, prices} from './Sections/Datas';
+import {continents, prices} from '../../utils/Datas';
 
 function LandingPage(props) {
     const [products, setProducts] = useState([])
@@ -57,14 +57,16 @@ function LandingPage(props) {
 
     const renderCards = () => products.map((product, index) => {
         return (<Col lg={6} md={8} s={12} xs={24}  key = {index}>
-                    <Card
-                        cover={<ImageSlider images={product.images} style = {{width : '100%', maxHeight : '150px'}}/>}
-                    >
-                        <Meta 
-                            title = {product.title}
-                            description = {product.description}
-                        />
-                    </Card> 
+                    <a href = {`/product/${product._id}`}>
+                        <Card
+                            cover={<ImageSlider images={product.images} style = {{width : '100%', maxHeight : '150px'}}/>}
+                        >
+                            <Meta 
+                                title = {product.title}
+                                description = {product.description}
+                            />
+                        </Card> 
+                    </a>
                 </Col>)
     })
 

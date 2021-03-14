@@ -2,6 +2,7 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     AUTH_USER,
+    ADD_TO_CART,
 } from "../_action/types";
 
 export default (state = {}, action) => {
@@ -14,6 +15,9 @@ export default (state = {}, action) => {
             break;
         case AUTH_USER :
             return {...state, userData : action.payload};
+            break;
+        case ADD_TO_CART :
+            return {...state, userData : {...state.userData, cart : action.payload.cart}};
             break;
         default:
             return state;

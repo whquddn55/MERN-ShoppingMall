@@ -23,7 +23,17 @@ const userSchema = mongoose.Schema( {
         type : Number,
         default : 0
     },
-    image : String,
+    image : {
+        type : String,
+    },
+    cart : {
+        type : Array,
+        default : []
+    },
+    history : {
+        type : Array,
+        default : []
+    },
     token : { // 유효성 판단
         type : String
     },

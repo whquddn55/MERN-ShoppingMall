@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const {Product} = require('../models/Product');
 const auth = require('../middleware/auth');
 
 router.post('/register', (req, res) => {
@@ -53,4 +54,40 @@ router.get('/logout', auth, (req, res) => {
         });
 });
 
+router.post('/toCart', auth, (req, res) => {
+    let include = false;
+    req.user.cart.forEach(element => {
+        if (element.productId === req.body.productId) {
+            include = true;
+        }
+    });
+
+    if (include === true) {
+        User.findOneAndUpdate(
+            {_id : req.user._id, "cart.productId" : req.body.productId}, 
+            {$inc : {"cart.$.quantity" : 1}},
+            {new : true}, // update된 결과값을 받아옴.
+            (err, userInfo) => {
+                if (err) return res.status(400).json({success : false, err});
+                return res.status(200).send({success : true, cart : userInfo.cart});
+            })
+    } 
+    else {
+        User.findByIdAndUpdate(
+            req.user._id,
+            { $push : {
+                cart: {
+                    productId : req.body.productId,
+                    quantity : 1,
+                    date : Date.now()
+                }
+            }},
+            {new : true},
+            (err, userInfo) => {
+                if (err) return res.status(400).json({success : false, err});
+                return res.status(200).send({success : true, cart : userInfo.cart});
+            }
+        )
+    }
+})
 module.exports = router;

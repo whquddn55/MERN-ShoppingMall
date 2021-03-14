@@ -40,8 +40,6 @@ router.post('/products', (req, res) => {
         if (Object.keys(req.body.filter[key]).length > 0)
             filter[key] = req.body.filter[key];
     }
-    console.log(filter);
-    console.log(term);
     if (term) {
         Product.find(filter)
             .find({$text : {$search : term}})
@@ -65,6 +63,11 @@ router.post('/products', (req, res) => {
     }
 })
 
-
+router.get('/:id', (req, res) => {
+    Product.findOne({_id : req.params.id}, (err, productInfo) => {
+        if (err) return res.status(400).json({success : false, err});
+        return res.status(200).json({success : true, productInfo});
+    })
+})
 
 module.exports = router;
