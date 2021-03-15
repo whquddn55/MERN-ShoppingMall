@@ -8,7 +8,7 @@ import RadioBox from './Sections/RadioBox';
 import SearchBar from './Sections/SearchBar';
 import {continents, prices} from '../../utils/Datas';
 
-function LandingPage(props) {
+function LandingPage() {
     const [products, setProducts] = useState([])
     const [skip, setSkip] = useState(0)
     const [lastPostSize, setLastPostSize] = useState(4)
@@ -21,7 +21,7 @@ function LandingPage(props) {
     const limit = 4;
 
     useEffect(() => {
-        getProducts({limit});
+        getProducts();
     }, [])
 
     const mounted = useRef(false);
@@ -29,13 +29,14 @@ function LandingPage(props) {
         if (!mounted.current)
             mounted.current = true;
         else {
-            getProducts({limit});
+            getProducts();
             setSkip(0); 
         }
     }, [filter])
 
-    const getProducts = (body, loadMore = false) => {
-        axios.post('/api/product/products', {...body, filter})
+    const getProducts = (body = {}, loadMore = false) => {
+        let skip = body.skip ? body.skip : 0;
+        axios.get(`/api/product/products?skip=${skip}&limit=${limit}&filter=${JSON.stringify(filter)}`)
             .then(response => {
                 if (response.data.success) {
                     setLastPostSize(response.data.productsInfo.length);
@@ -51,7 +52,7 @@ function LandingPage(props) {
     }
 
     const onLoadMore = () => {
-        getProducts({limit, skip : skip + limit}, true);
+        getProducts({skip : skip + limit}, true);
         setSkip(skip + limit);
     }
 

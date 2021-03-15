@@ -40,7 +40,9 @@ router.get('/auth', auth, (req, res) => {
         email : req.user.email,
         name : req.user.name,
         role : req.user.role,
-        image : req.user.image
+        image : req.user.image,
+        cart : req.user.cart,
+        hisotry : req.user.hisotry,
     });
 });
 
@@ -90,4 +92,5 @@ router.post('/toCart', auth, (req, res) => {
         )
     }
 })
+
 module.exports = router;

@@ -3,6 +3,7 @@ import {
     REGISTER_USER,
     AUTH_USER,
     ADD_TO_CART,
+    GET_CART_ITEMS,
 } from "../_action/types";
 
 export default (state = {}, action) => {
@@ -18,6 +19,9 @@ export default (state = {}, action) => {
             break;
         case ADD_TO_CART :
             return {...state, userData : {...state.userData, cart : action.payload.cart}};
+            break;
+        case GET_CART_ITEMS :
+            return {...state, cartDetail : [...action.payload.product]}; 
             break;
         default:
             return state;

@@ -10,6 +10,7 @@ import RegisterPage from './views/RegisterPage/RegisterPage';
 import NavBar from './views/NavBar/NavBar';
 import UploadProductPage from './views/UploadProductPage/UploadProductPage';
 import ProductDetail from './views/ProductDetail/ProductDetail';
+import CartPage from './views/CartPage/CartPage';
 import Auth from '../hoc/auth';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route exact path="/login" component={Auth(LoginPage, false)} />
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
           <Route exact path="/upload" component={Auth(UploadProductPage, true)} />
+          <Route exact path="/cart" component={Auth(CartPage, true)} />
           <Route exact path="/product/:productId" component={Auth(ProductDetail, null)} />
         </Switch>
       </div>

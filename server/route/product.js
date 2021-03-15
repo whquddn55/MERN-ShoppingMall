@@ -29,16 +29,18 @@ router.post('/', (req, res) => {
     })
 });
 
-router.post('/products', (req, res) => {
-    const limit = req.body.limit ? parseInt(req.body.limit) : 100;
-    const skip = req.body.skip ? parseInt(req.body.skip) : 0;
-    const term = req.body.filter.term
+router.get('/products', (req, res) => {
+    
+    const limit = req.query.limit ? parseInt(req.query.limit) : 100;
+    const skip = req.query.skip ? parseInt(req.query.skip) : 0;
+    const reqFilter = JSON.parse(req.query.filter);
+    const term = reqFilter.term;
     let filter = {};
-    for (let key in req.body.filter)  {
+    for (let key in reqFilter)  {
         if (key === 'term')
             continue;
-        if (Object.keys(req.body.filter[key]).length > 0)
-            filter[key] = req.body.filter[key];
+        if (Object.keys(reqFilter[key]).length > 0)
+            filter[key] = reqFilter[key];
     }
     if (term) {
         Product.find(filter)
@@ -61,6 +63,18 @@ router.post('/products', (req, res) => {
                 return res.status(200).json({success : true, productsInfo})
             })
     }
+})
+
+router.get('/products/:id', (req, res) => {
+    const ids = req.params.id.split(',');
+    console.log(ids);
+
+    Product.find({_id : {$in : ids}})
+        .populate('writer')
+        .exec((err, product) => {
+            if (err) return res.status(400).json({success : false, err});
+            return res.status(200).json({success : true, product});
+        })
 })
 
 router.get('/:id', (req, res) => {
