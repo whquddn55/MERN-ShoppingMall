@@ -1,7 +1,11 @@
 import React from 'react'
+import {useDispatch} from 'react-redux'
+import {updateCartItemQuantity} from '../../../../_action/user_action'
 import {Table, InputNumber} from 'antd'
 
 function UserCardBlock(props) {
+    const dispatch = useDispatch();
+
 
     const columns = [
         {
@@ -22,7 +26,7 @@ function UserCardBlock(props) {
                 max = {10}
                 defaultValue = {text} 
                 formatter = {value => `${value} EA`}
-                onChange = {onQuantityChangeHandler}
+                onChange = {(value) => onQuantityChangeHandler(value)}
             />)
         },
         {
@@ -47,6 +51,7 @@ function UserCardBlock(props) {
 
     function onQuantityChangeHandler(value) {
         console.log(value);
+        //dispatch(updateCartItemQuantity());
         /** redux 통해서 quantity 변경 */
     }
 
@@ -58,7 +63,6 @@ function UserCardBlock(props) {
                 dataSource = {data} 
                 pagination = {{hideOnSinglePage : true}}
                 bordered/>
-            
         </div>
         
     )

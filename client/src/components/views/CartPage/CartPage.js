@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {getCartItems} from '../../../_action/user_action'
+import axios from'axios';
+import {getCartItems, removeCartItem} from '../../../_action/user_action'
 import {message, Button} from 'antd'
 import UserCardBlock from './Sections/UserCardBlock';
 
@@ -13,7 +14,7 @@ function CartPage(props) {
     const user = useSelector(state => state.user);
 
     useEffect(() => {
-        if (user.userData && user.userData.cart) {
+        if (user.userData && user.userData.cart.length > 0) {
             dispatch(getCartItems(user.userData.cart))
                 .then(response => setProducts(response.payload.product))
         }
@@ -27,7 +28,18 @@ function CartPage(props) {
     }, [selected])
 
     function onRemoveHanlder(event) {
-        console.log(selected);
+        let productIds = [];
+        selected.forEach(value => {
+            productIds.push(products[value]._id);
+        })
+        
+        if (productIds.length) {
+            dispatch(removeCartItem(productIds))
+            .then(response => {
+                setProducts(response.payload.product);
+                setSelected([]);
+            })
+        }
         /** redux 통해서 삭제 */
     }
 

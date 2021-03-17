@@ -10,11 +10,9 @@ function ProductDetail(props) {
     const [productInfo, setProductInfo] = useState();
 
     useEffect(() => {
-        console.log(productId);
         axios.get(`/api/product/${productId}`)
             .then(response => {
                 if (response.data.success) {
-                    console.log(response.data);
                     setProductInfo(response.data.productInfo);
                 }
                 else {

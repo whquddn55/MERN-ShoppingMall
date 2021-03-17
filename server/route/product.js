@@ -30,7 +30,6 @@ router.post('/', (req, res) => {
 });
 
 router.get('/products', (req, res) => {
-    
     const limit = req.query.limit ? parseInt(req.query.limit) : 100;
     const skip = req.query.skip ? parseInt(req.query.skip) : 0;
     const reqFilter = JSON.parse(req.query.filter);
@@ -65,9 +64,8 @@ router.get('/products', (req, res) => {
     }
 })
 
-router.get('/products/:id', (req, res) => {
-    const ids = req.params.id.split(',');
-    console.log(ids);
+router.get('/products_by_id', (req, res) => {
+    const ids = req.query.id.split(',');
 
     Product.find({_id : {$in : ids}})
         .populate('writer')

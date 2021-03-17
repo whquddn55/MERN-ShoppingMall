@@ -5,6 +5,8 @@ import {
     AUTH_USER,
     ADD_TO_CART,
     GET_CART_ITEMS,
+    UPDATE_CART_ITEM_QUANTITY,
+    REMOVE_CART_ITEM
 } from "./types"
 
 export function loginUser(dataToSubmit) {
@@ -47,7 +49,8 @@ export function addToCart(productId) {
 
 export function getCartItems(userCart) {
     let cart = userCart.map(element => (element.productId));
-    const response = axios.get(`/api/product/products/${cart}`)
+
+    const response = axios.get(`/api/product/products_by_id?id=${cart}`)
         .then(response => {
             response.data.product.forEach(element1 => {
                 userCart.forEach(element2 => {
@@ -62,3 +65,37 @@ export function getCartItems(userCart) {
         payload : response,
     }
 }
+
+export function updateCartItemQuantity(productId, quantity) {
+    const response = axios.put(`/api/user/cart`, {
+        productId,
+        quantity,
+    }) .then (response => {
+        console.log(response.data);
+    })
+
+
+    return {
+        type : UPDATE_CART_ITEM_QUANTITY,
+        payload : response,
+    }
+}
+
+export function removeCartItem(productIds) {
+    const response = axios.delete(`/api/users/cart?id=${productIds}`)
+        .then(response => {
+            // quantity 넣는 작업
+            response.data.product.forEach(element1 => {
+                response.data.cart.forEach(element2 => {
+                    if (element1._id == element2.productId)
+                        element1.quantity = element2.quantity;
+                })
+            })
+            return response.data;
+        })
+
+    return {
+        type : REMOVE_CART_ITEM,
+        payload : response,
+    }
+} 
