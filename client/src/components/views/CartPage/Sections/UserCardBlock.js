@@ -1,11 +1,10 @@
 import React from 'react'
 import {useDispatch} from 'react-redux'
 import {updateCartItemQuantity} from '../../../../_action/user_action'
-import {Table, InputNumber} from 'antd'
+import {Table, InputNumber, message} from 'antd'
 
 function UserCardBlock(props) {
     const dispatch = useDispatch();
-
 
     const columns = [
         {
@@ -20,13 +19,13 @@ function UserCardBlock(props) {
         {
             title : 'Product Quantity',
             dataIndex : 'quantity',
-            render: (text) => (
+            render: (text, record, index) => (
             <InputNumber 
                 min = {1} 
                 max = {10}
                 defaultValue = {text} 
                 formatter = {value => `${value} EA`}
-                onChange = {(value) => onQuantityChangeHandler(value)}
+                onChange = {(value) => onQuantityChangeHandler(index, value)}
             />)
         },
         {
@@ -49,10 +48,19 @@ function UserCardBlock(props) {
         onChange : props.setSelected
       };
 
-    function onQuantityChangeHandler(value) {
-        console.log(value);
-        //dispatch(updateCartItemQuantity());
-        /** redux 통해서 quantity 변경 */
+    function onQuantityChangeHandler(index, value) {
+        const hide = message.loading({content : "changing....", key:'loading'});
+        dispatch(updateCartItemQuantity(props.products[index]._id, value))
+        .then(response => {
+            hide();
+            if (response.payload.success) {
+                message.success({content : "Success to change quantity", key:'loading'});
+                props.setProducts(response.payload.product);
+            }
+            else {
+                message.error("Fail to change quantity");
+            }
+        })
     }
 
     return (

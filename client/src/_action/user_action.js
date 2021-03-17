@@ -67,13 +67,18 @@ export function getCartItems(userCart) {
 }
 
 export function updateCartItemQuantity(productId, quantity) {
-    const response = axios.put(`/api/user/cart`, {
+    const response = axios.put(`/api/users/cart`, {
         productId,
         quantity,
     }) .then (response => {
-        console.log(response.data);
+        response.data.product.forEach(element1 => {
+            response.data.cart.forEach(element2 => {
+                if (element1._id == element2.productId)
+                    element1.quantity = element2.quantity;
+            })
+        })
+        return response.data;
     })
-
 
     return {
         type : UPDATE_CART_ITEM_QUANTITY,

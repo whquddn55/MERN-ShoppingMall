@@ -94,14 +94,22 @@ router.post('/toCart', auth, (req, res) => {
 })
 
 router.put(`/cart`, auth, (req, res) => {
-    let success = false;
-    req.user.cart.forEach(element => {
-        if (element.productId == req.body.productId) {
-            success = true;
-            element.quantity = req.body.quantity;
+    User.findOneAndUpdate(
+        {_id : req.user._id, "cart.productId" : req.body.productId},
+        {$set : {"cart.$.quantity" : req.body.quantity}},
+        {new : true},
+        (err, userInfo) => {
+            if (err) return res.status(400).json({success : false, err});
+            let cart = userInfo.cart;
+            let productIds = cart.map(item => item.productId);
+            Product.find({_id : {$in : productIds}})
+                .populate('writer')
+                .exec((err, product) => {
+                    if (err) return res.status(400).json({success : false, err});
+                    return res.status(200).json({success : true, product, cart});
+                });
         }
-    })
-    return res.status(200).json({success, cart : req.user.cart});
+    )
 })
 
 router.delete('/cart', auth, (req, res) => {

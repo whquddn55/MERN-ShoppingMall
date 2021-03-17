@@ -26,7 +26,7 @@ export default (state = {}, action) => {
             return {...state, cartDetail : action.payload.product}; 
             break;
         case UPDATE_CART_ITEM_QUANTITY:
-            return {...state, userData : {...state.userData, cart : action.payload.cart}};
+            return {...state, userData : {...state.userData, cart : action.payload.cart}, cartDetail : action.payload.product};
         case REMOVE_CART_ITEM:
             return {...state, userData : {...state.userData, cart : action.payload.cart}, cartDetail : action.payload.product};
         default:
